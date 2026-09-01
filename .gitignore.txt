@@ -1,0 +1,8 @@
+# Arquivos objeto
+*.o
+
+# Executáveis Linux
+*.out
+
+# Executáveis Windows
+*.exe
