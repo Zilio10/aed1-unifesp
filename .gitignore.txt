@@ -1,8 +1,11 @@
-# Arquivos objeto
-*.o
+# Ignora tudo
+*
 
-# Executáveis Linux
-*.out
+# Permite navegar nas pastas
+!*/
 
-# Executáveis Windows
-*.exe
+# Permite todos os arquivos .c
+!*.c
+
+# Permite tudo dentro da pasta Livro
+!Livro/**
