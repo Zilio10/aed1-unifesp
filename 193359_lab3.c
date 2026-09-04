@@ -28,6 +28,10 @@ Caixa *aloca_caixas(int N) {
     return refCaixa; // Retornando a referência de um struct do tipo Caixa
 }
 
+int h(int K, int N) {
+    return K % N;
+}
+
 void insere(Caixa *refCaixa, int K) {
 
     int indice = h(K, refCaixa->N); // Obtendo a caixa em que K será inserido
@@ -60,7 +64,7 @@ No *retira(Caixa *refCaixa, int K) { // A função retorna o endereço removido par
 
         No *p = refCaixa->caixa[indice]; // P recebe a cabeça
         if (p->info == K) { // Como a lista nao esta vazia e nao foi percorrido nenhum laço, a condição verifica se o primeiro elemento é = K
-            refCaixa->caixa[indice] = p->prox; // a cabeça passa a ser o elemento para qual P aponta, Logo: P foi desencadeadoolha, se
+            refCaixa->caixa[indice] = p->prox; // a cabeça passa a ser o elemento para qual P aponta, Logo: P foi desencadeada
             return p;
         } else { // Lista nao está vazia e não é o priemriro elemento
 
@@ -83,13 +87,66 @@ No *retira(Caixa *refCaixa, int K) { // A função retorna o endereço removido par
     }
 }
 
-int h(int K, int N) {
-    return K % N;
+void imprime(Caixa *cx) {
+
+    for (int i = 0; i < cx->N; i++) {
+        No *p = cx->caixa[i];
+        while (p != NULL) {
+            printf("%d ", p->info);
+            p = p->prox;
+        }
+        printf("\n");
+    }
+
+}
+
+void desaloca_lista(No *cabeca) {
+
+    No* p = cabeca;
+    while(p != NULL) { // Enquanto não chegar ao final da lista
+        cabeca = p->prox; // cabeca guarda o endereco do nó posterior
+        free(p); // nó atual é liberado
+        p = cabeca; // nó atual recebe o nó posterior
+    }
+
+}
+
+void desaloca_caixas(Caixa *cx) {
+    for (int i = 0; i < cx->N; i++) {
+        desaloca_lista(cx->caixa[i]); // Desalocando de fato as listas encadeadas
+    }
+
+    free(cx->caixa); // Desalocando o vetor de ponteiros
+    free(cx); // Desalocando o struct
 }
 
 int main() {
 
-    No *cabeca = inicializa();
+    int N , m, K, L;
+
+    scanf("%d", &N); // Num de caixas
+    Caixa *refCaixa = aloca_caixas(N); // Alocando caixas
+
+    scanf("%d", &m); // Qtd de inteiros
+
+    for (int i = 0; i < m; i++) {
+        scanf("%d", &K);
+        insere(refCaixa, K); // inserindo os valores nas caixas
+    }
+
+    scanf("%d", &L); // inteiro para ser buscado
+    No* resRetira = retira(refCaixa, L); // retirando o elemento L (ou não)
+    if (resRetira == NULL) {
+        printf("-1");
+    } else {
+        printf("%d", resRetira->info);
+        free(resRetira);
+    }
+    printf("\n");
+
+    imprime(refCaixa);
+
+    desaloca_caixas(refCaixa);
 
     return 0;
 }
