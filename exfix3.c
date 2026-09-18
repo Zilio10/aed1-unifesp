@@ -52,6 +52,28 @@ No *buscar_elemento(No *cabeca, int elemento) {
 
 No *remover_no(No *cabeca, int elemento) {
 
+    if (cabeca == NULL) { // Lista vazia, nenhum elemento removido
+        return cabeca;
+    }
+
+    if (cabeca->prox == cabeca && cabeca->info == elemento) { // Lista tem apenas 1 elemento
+        free(cabeca);
+        cabeca = NULL;
+        return cabeca;
+    }
+
+    No *p, *ant = cabeca;
+    for(p = cabeca->prox; p != cabeca && p->info != elemento; p = p->prox) { // Percorrendo lista
+        ant = p; // Preservando o nó anterior
+    }
+
+    if (p->info != elemento) return cabeca; // Se o elemento não foi encontrado
+
+    ant->prox = p->prox; // Em todos os casos
+    if (p == cabeca) cabeca = ant; // Se o elemento estiver na cabeca, movemos a cabeca
+    free(p);
+
+    return cabeca;
 }
 
 int main () {
@@ -61,6 +83,11 @@ int main () {
     cabeca = insere_comeco(cabeca, 3);
 
     No* noEncontrado = buscar_elemento(cabeca, 3);
+
+    cabeca = remover_no(cabeca, 3);
+
+    free(noEncontrado);
+    free(cabeca);
 
     return 0;
 }
